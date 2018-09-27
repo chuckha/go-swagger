@@ -11,7 +11,13 @@
   {{- if and (not .Required) (or (not .IsArray) .IsEmptyOmitted) }},omitempty{{ end }}
 {{- end }}"
 {{- if .XMLName }} xml:"{{ .XMLName }}"{{ end }}
-{{- if .CustomTag }} {{ .CustomTag }}{{ end }}`
+{{- if .CustomTag }} {{ .CustomTag }}{{ end }}
+ yaml:"{{- if $.HasBaseType -}}
+  -
+{{- else }}
+  {{- .OriginalName }}
+  {{- if and (not .Required) (or (not .IsArray) .IsEmptyOmitted) }},omitempty{{ end }}
+{{- end }}"`
 {{ end }}
 
 {{- define "tuplefield" }}
