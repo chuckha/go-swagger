@@ -109,6 +109,8 @@
   {{ if .HasAdditionalProperties }}
     {{- if  .AdditionalProperties.HasValidations }}
     for {{ .AdditionalProperties.KeyVar }} := range {{ .ValueExpression }} {
+      {{/* always use the keyvar */}}
+      var _ = {{ .AdditionalProperties.KeyVar }}
       {{ with .AdditionalProperties }}
         {{- if and (not .Required) .IsNullable }}{{/* skip when nul type is accepted */}}
       if swag.IsZero({{ .ValueExpression }}) { // not required
@@ -214,7 +216,7 @@
     {{- if and .IsMap .HasValidations }}{{/* validation of aliased maps but does not know about AdditionalProperties: e.g. it comes from a $ref */}}
       {{- if not .IsAnonymous }}
         {{- if $.IsMap }}{{/* we come from a map range */}}
-      if val, ok := {{ .ValueExpression }}; ok {  
+      if val, ok := {{ .ValueExpression }}; ok {
         {{- end }}
         {{- if and .IsNullable (not .IsMapNullOverride) }}
           {{- if $.IsMap }}
@@ -229,7 +231,7 @@
         {{- if and .IsNullable (not .IsMapNullOverride) }}
         }
         {{- end }}
-        {{- if or $.IsMap }} 
+        {{- if or $.IsMap }}
      }
         {{- end }}
       {{- end }}
